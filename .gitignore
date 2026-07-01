@@ -1,0 +1,25 @@
+# Backend (Spring Boot / Maven)
+backend/target/
+backend/*.log
+backend/error.log
+backend/apache-maven-*/
+
+# Frontend (Node / Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+frontend/*.log
+
+# VS Code / IDEs
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store

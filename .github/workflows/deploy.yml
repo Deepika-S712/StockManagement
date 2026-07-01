@@ -1,0 +1,51 @@
+name: 🚀 Build & Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ⚙️ Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 📥 Install dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: 🔨 Build frontend (Vite)
+        run: |
+          cd frontend
+          npm run build
+
+      - name: 📋 Copy build output to root for GitHub Pages
+        run: |
+          cp frontend/dist/index.html index.html
+          rm -rf assets
+          mkdir -p assets
+          cp -r frontend/dist/assets/. assets/
+
+      - name: 🚀 Commit & Push updated build to main
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html assets/
+          git diff --cached --quiet || git commit -m "chore: auto-deploy GitHub Pages build [skip ci]"
+          git push origin main
