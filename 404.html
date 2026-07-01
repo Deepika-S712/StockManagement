@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/StockManagement/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Smart Inventory Management System helps businesses track products, suppliers, sales, and automate reordering with advanced dashboard analytics." />
+    <title>Smart Inventory - Inventory Management System</title>
+    <script>
+      window.onerror = function (message, source, lineno, colno, error) {
+        var div = document.createElement('div');
+        div.style.position = 'fixed';
+        div.style.top = '0';
+        div.style.left = '0';
+        div.style.width = '100%';
+        div.style.background = 'red';
+        div.style.color = 'white';
+        div.style.padding = '20px';
+        div.style.zIndex = '99999';
+        div.style.fontSize = '16px';
+        div.style.fontFamily = 'monospace';
+        div.innerHTML = '<strong>JS Error:</strong> ' + message + '<br>Line: ' + lineno + ':' + colno + '<br>Source: ' + source;
+        document.body.appendChild(div);
+      };
+      window.onunhandledrejection = function (event) {
+        var div = document.createElement('div');
+        div.style.position = 'fixed';
+        div.style.top = '0';
+        div.style.left = '0';
+        div.style.width = '100%';
+        div.style.background = 'orange';
+        div.style.color = 'white';
+        div.style.padding = '20px';
+        div.style.zIndex = '99999';
+        div.style.fontSize = '16px';
+        div.style.fontFamily = 'monospace';
+        div.innerHTML = '<strong>Promise Rejection:</strong> ' + event.reason;
+        document.body.appendChild(div);
+      };
+    </script>
+    <script type="module" crossorigin src="/StockManagement/assets/index-Dv1LSndA.js"></script>
+    <link rel="stylesheet" crossorigin href="/StockManagement/assets/index-B29ly42b.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

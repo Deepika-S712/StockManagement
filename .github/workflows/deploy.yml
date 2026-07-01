@@ -38,6 +38,7 @@ jobs:
       - name: 📋 Copy build output to root for GitHub Pages
         run: |
           cp frontend/dist/index.html index.html
+          cp frontend/dist/index.html 404.html
           rm -rf assets
           mkdir -p assets
           cp -r frontend/dist/assets/. assets/
@@ -46,6 +47,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html assets/
+          git add index.html 404.html assets/
           git diff --cached --quiet || git commit -m "chore: auto-deploy GitHub Pages build [skip ci]"
           git push origin main
