@@ -25,30 +25,13 @@ if (isLocalOrDemo) {
     localStorage.setItem(`db_${key}`, JSON.stringify(data));
   };
 
-  // Seed Initial Data
-  const initialSuppliers = [
-    { id: 1, name: "Alpha Distributors", contact: "alpha@distributors.com", rating: 4.8, deliveryTime: 3, priceLevel: 2 },
-    { id: 2, name: "Apex Logistics", contact: "apex@logistics.com", rating: 4.5, deliveryTime: 5, priceLevel: 3 },
-    { id: 3, name: "Global Warehousing", contact: "global@warehousing.com", rating: 4.2, deliveryTime: 8, priceLevel: 1 },
-  ];
-
-  const initialProducts = [
-    { id: 1, name: "Pro Wireless Mouse", category: "Electronics", price: 29.99, quantity: 4, supplier: initialSuppliers[0] },
-    { id: 2, name: "Mechanical Keyboard", category: "Electronics", price: 79.99, quantity: 15, supplier: initialSuppliers[0] },
-    { id: 3, name: "Ergonomic Office Chair", category: "Furniture", price: 189.99, quantity: 8, supplier: initialSuppliers[1] },
-    { id: 4, name: "USB-C Hub Adapter", category: "Electronics", price: 19.99, quantity: 25, supplier: initialSuppliers[2] },
-  ];
-
-  const initialSales = [
-    { id: 1, product: initialProducts[0], quantitySold: 12, date: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString() },
-    { id: 2, product: initialProducts[1], quantitySold: 5, date: new Date(Date.now() - 2 * 24 * 3600 * 1000).toISOString() },
-  ];
-
-  const initialHistory = [
-    { id: 1, product: initialProducts[0], changeType: "ADD", quantity: 16, date: new Date(Date.now() - 10 * 24 * 3600 * 1000).toISOString() },
-    { id: 2, product: initialProducts[0], changeType: "REDUCE", quantity: 12, date: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString() },
-    { id: 3, product: initialProducts[1], changeType: "ADD", quantity: 20, date: new Date(Date.now() - 8 * 24 * 3600 * 1000).toISOString() },
-    { id: 4, product: initialProducts[1], changeType: "REDUCE", quantity: 5, date: new Date(Date.now() - 2 * 24 * 3600 * 1000).toISOString() },
+  // Seed Initial Data (Empty for user manual input as requested)
+  const initialSuppliers = [];
+  const initialProducts = [];
+  const initialSales = [];
+  const initialHistory = [];
+  const initialUsers = [
+    { id: 1, name: "Master Admin", email: "admin@test.com", password: "password", role: "Admin" }
   ];
 
   // Custom Axios Adapter
@@ -70,15 +53,24 @@ if (isLocalOrDemo) {
     try {
       // 1. Auth Endpoint
       if (resource === 'auth') {
+        const users = getDB('users', initialUsers);
         const action = pathParts[1];
         if (action === 'login') {
-          if (body.email === 'admin@test.com' && body.password === 'password') {
-            responseData = { id: 1, name: "Master Admin", email: "admin@test.com", role: "Admin" };
+          const user = users.find(u => u.email === body.email && u.password === body.password);
+          if (user) {
+            responseData = { id: user.id, name: user.name, email: user.email, role: user.role };
           } else {
             throw { status: 401, message: "Invalid email or password" };
           }
         } else if (action === 'register') {
-          responseData = { id: Date.now(), name: body.name, email: body.email, role: body.role };
+          const exists = users.find(u => u.email === body.email);
+          if (exists) {
+            throw { status: 400, message: "Email already registered" };
+          }
+          const newUser = { id: Date.now(), name: body.name, email: body.email, password: body.password, role: body.role || 'Manager' };
+          users.push(newUser);
+          saveDB('users', users);
+          responseData = { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role };
         }
       }
 
